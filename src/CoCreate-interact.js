@@ -61,10 +61,24 @@ function initInteract() {
             
             target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)'
             target.classList.remove("sort-ghost-class");
-            createChangeContentEvent(findSaveFetchElByChild(event.target));
+            // createChangeContentEvent(findSaveFetchElByChild(event.target));
+            
+            if (CoCreateIsotope) {
+                CoCreateIsotope.__resetLayout(CoCreateUtils.getParentFromElement(event.target, 'isotope-grid'));
+            }
+            
         }).on('resizeend', function(event) {
             var target = event.target
             target.classList.remove("sort-ghost-class");
+            
+            document.dispatchEvent(new CustomEvent('change-content', {
+                detail: {
+                    element: target,
+                    type: 'clone-create',
+                    broadcast: true,
+                    broadcast_sender: false,
+                }
+            }))
             
             if (resizeContainer.classList.contains("isotope-grid")) { //. case isotope
                 //. change content event
@@ -73,7 +87,10 @@ function initInteract() {
                 target.setAttribute('data-x', 0)
                 target.setAttribute('data-y', 0)
                 
-                saveHtml(findSaveFetchElByChild(event.target));
+                // saveHtml(findSaveFetchElByChild(event.target));
+                // if (CoCreateIsotope) {
+                //     CoCreateIsotope.__resetLayout(CoCreateUtils.getParentFromElement(event.target, 'isotope-grid'));
+                // }
             }
         }) 
     }
